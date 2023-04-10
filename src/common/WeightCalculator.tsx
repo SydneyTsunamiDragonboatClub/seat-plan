@@ -54,10 +54,16 @@ export function calculateLeftRightBalance(board: any, paddlers: any) {
     ];
 
     // get left right weight factor
-    let value = 0;
+    let value = 0, menCount = 0, womenCount = 0;
     for (let i = 1, l = leftRightFactor.length - 1; i < l; i++) {
         const leftPaddler = board[`left-${i}`].paddlerIds[0];
         const rightPaddler = board[`right-${i}`].paddlerIds[0];
+
+        menCount += leftPaddler && paddlers[leftPaddler].gender === 'M' ? 1 : 0;
+        menCount += rightPaddler && paddlers[rightPaddler].gender === 'M' ? 1 : 0;
+
+        womenCount += leftPaddler && paddlers[leftPaddler].gender === 'F' ? 1 : 0;
+        womenCount += rightPaddler && paddlers[rightPaddler].gender === 'F' ? 1 : 0;
 
         const leftPaddlerWeight = leftPaddler ? paddlers[leftPaddler].weight : 0;
         const rightPaddlerWeight = rightPaddler ? paddlers[rightPaddler].weight : 0;
@@ -72,6 +78,8 @@ export function calculateLeftRightBalance(board: any, paddlers: any) {
     return {
         rightHeavy: value > 0,
         value: value.toFixed(1),
-        alert: Math.abs(value) > 5
+        alert: Math.abs(value) > 5,
+        menCount,
+        womenCount
     };
 }

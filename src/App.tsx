@@ -135,7 +135,7 @@ function App() {
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
-            <div className={`flex-col`}>
+            <div className={`flex-col gap-2`}>
                 <div className={`flex p-4`}>
                     <input
                         type="file"
@@ -144,6 +144,22 @@ function App() {
                         onChange={changeHandler}
                         // style={{display: "block", margin: "10px auto"}}
                     />
+                </div>
+                <div className={'px-4 space-x-2 flex text-sm'}>
+                    <label>
+                        <input className="sr-only peer" name="size" type="radio" value="prem" checked/>
+                        <div
+                            className="w-24 h-9 rounded-lg flex items-center justify-center text-slate-700 bg-slate-200 peer-checked:font-semibold peer-checked:bg-slate-900 peer-checked:text-white">
+                            Premier
+                        </div>
+                    </label>
+                    <label>
+                        <input className="sr-only peer" name="size" type="radio" value="sra"/>
+                        <div
+                            className="w-24 h-9 rounded-lg flex items-center justify-center text-slate-700 bg-slate-200 peer-checked:font-semibold peer-checked:bg-slate-900 peer-checked:text-white">
+                            Senior A
+                        </div>
+                    </label>
                 </div>
                 <div className={`flex p-4`}>
                     {state.board && <Column key={state.board['main'].id} column={state.board['main']}
@@ -196,14 +212,22 @@ function App() {
                             }`
                         </div>
                     </div>
-                    <div className={`flex flex-col p-4`}>
+                    <div className={`flex flex-col p-4 gap-2`}>
                         <div className={`flex gap-2`}>
                             <p>{leftRightBalance.value}</p>
-                            <p>{leftRightBalance.rightHeavy ? "RIGHT HEAVY" : "LEFT HEAVY"}</p>
+                            <p className={`px-2 ${leftRightBalance.alert ? "bg-red-500 text-white" : ""}`}>
+                                {leftRightBalance.rightHeavy ? "RIGHT HEAVY" : "LEFT HEAVY"}
+                            </p>
                         </div>
                         <div className={`flex gap-2`}>
                             <p>{frontBackBalance.value}</p>
-                            <p>{frontBackBalance.frontHeavy ? "FRONT HEAVY" : "BACK HEAVY"}</p>
+                            <p className={`px-2 ${frontBackBalance.alert ? "bg-red-500 text-white" : ""}`}>
+                                {frontBackBalance.frontHeavy ? "FRONT HEAVY" : "BACK HEAVY"}
+                            </p>
+                        </div>
+                        <div className={`flex-col gap-2`}>
+                            <p>MEN: {leftRightBalance?.menCount || 0}</p>
+                            <p>WOMEN: {leftRightBalance?.womenCount || 0}</p>
                         </div>
                     </div>
                 </div>

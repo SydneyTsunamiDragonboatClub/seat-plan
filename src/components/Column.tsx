@@ -24,7 +24,13 @@ const Column: React.FC<ColumnProps> = ({column, paddlers}) => {
 
     return (
         <div className={`m-0.5 border-solid border border-black 
-            ${column.id !== "main" ? "w-40" : "mr-8 p-2 w-42"}
+            ${column.id !== "main" ? "w-44" : "overflow-y-auto h-[80vh] mr-8 p-2 w-48"}
+            ${column.id === "drummer" ? "rounded-t-2xl overflow-hidden" : ""}
+            ${column.id === "sweep" ? "rounded-b-2xl overflow-hidden" : ""}
+            ${column.id === "left-1" ? "rounded-tl-2xl overflow-hidden" : ""}
+            ${column.id === "left-10" ? "rounded-bl-2xl overflow-hidden" : ""}
+            ${column.id === "right-1" ? "rounded-tr-2xl overflow-hidden" : ""}
+            ${column.id === "right-10" ? "rounded-br-2xl overflow-hidden" : ""}
             rounded-sm flex flex-col`}>
             <Droppable droppableId={column.id} >
                 {(provided, snapshot) => (
@@ -33,7 +39,7 @@ const Column: React.FC<ColumnProps> = ({column, paddlers}) => {
                          {...provided.droppableProps}
                         className={`p-2 transition-all 
                            ${column.id !== "main" ? "h-12" : "flex flex-col gap-2"}
-                           ${snapshot.isDraggingOver ? "bg-slate-600" : column.id !== "main" && paddlers.length > 0 ? "bg-red-300" : "bg-white"}
+                           ${snapshot.isDraggingOver ? "bg-slate-600" : column.id !== "main" && paddlers.length > 0 ? "bg-amber-500" : "bg-white"}
                         `}
                     >
                         {paddlers.map((paddler:any, index:number) => (

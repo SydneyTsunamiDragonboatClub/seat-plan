@@ -18,7 +18,7 @@ const Paddler: React.FC<PaddlerProps> = ({paddler, index}) => {
                     rounded-md p-px px-2 transition-all
                     ${snapshot.isDragging ? "bg-slate-300" : "bg-white"}
                     `}>
-                    {paddler.id}
+                    {`${paddler.id} (${paddler.weight})`}
                 </div>
             )}
         </Draggable>
