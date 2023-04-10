@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/seat-plan/static/css/main.1c7311cb.css",
+    "main.js": "/seat-plan/static/js/main.2bf037cc.js",
+    "static/js/787.83423f34.chunk.js": "/seat-plan/static/js/787.83423f34.chunk.js",
+    "index.html": "/seat-plan/index.html",
+    "main.1c7311cb.css.map": "/seat-plan/static/css/main.1c7311cb.css.map",
+    "main.2bf037cc.js.map": "/seat-plan/static/js/main.2bf037cc.js.map",
+    "787.83423f34.chunk.js.map": "/seat-plan/static/js/787.83423f34.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1c7311cb.css",
+    "static/js/main.2bf037cc.js"
+  ]
+}
