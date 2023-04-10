@@ -24,8 +24,8 @@ const Column: React.FC<ColumnProps> = ({column, paddlers}) => {
 
     return (
         <div className={`m-0.5 border-solid border border-black 
-            ${column.id !== "main" ? "" : "mr-8"}
-            rounded-sm w-40 flex flex-col`}>
+            ${column.id !== "main" ? "w-40" : "mr-8 p-2 w-42"}
+            rounded-sm flex flex-col`}>
             <Droppable droppableId={column.id} >
                 {(provided, snapshot) => (
                     <div

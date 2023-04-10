@@ -1,12 +1,19 @@
 import React, {useState} from 'react';
-import Boat from './components/Boat';
+// import Boat from './components/Boat';
 import Column from './components/Column';
 import {DragDropContext} from 'react-beautiful-dnd';
-import {buildData} from "./common/DataBuilder";
+import {buildBoat} from "./common/DataBuilder";
 import {calculateLeftRightBalance, calculateFrontBackBalance} from "./common/WeightCalculator";
 
 function App() {
-    const [state, setState]: any = useState<any>(buildData());
+    const [state, setState]: any = useState<any>({
+        board: null,
+        drummer: [],
+        leftOrder: [],
+        rightOrder: [],
+        sweep: [],
+        paddlers: {}
+    });
     // const state:any = initialData;
 
     const leftRightBalance = calculateLeftRightBalance(state.board, state.paddlers);
@@ -85,7 +92,7 @@ function App() {
                         ...state,
                         board: {
                             ...state.board,
-                            ['main']: newMain,
+                            main: newMain,
                             [newStart.id]: newStart,
                             [newFinish.id]: newFinish
                         }
@@ -119,67 +126,85 @@ function App() {
         setState(newState);
     };
 
+    const changeHandler = async (event: React.FormEvent<HTMLInputElement>) => {
+        const file = (event.currentTarget.files as FileList).item(0);
+        const boat = await buildBoat(file as File);
+        setState(boat);
+    }
+
+
     return (
         <DragDropContext onDragEnd={onDragEnd}>
-            <div className={`flex`}>
-                <Column key={state.board['main'].id} column={state.board['main']}
-                        paddlers={state.board['main'].paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId])}/>
-                <div className={`flex-col`}>
-                    <div className={`flex justify-center`}>
-                        {state.drummer.map((columnId: string) => {
-                            const column = state.board[columnId];
-                            const paddlers = column.paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId]);
-
-                            return (
-                                <Column key={column.id} column={column} paddlers={paddlers}/>
-                            )
-                        })
-                        }`
-                    </div>
-                    <div className={`flex`}>
-                        <div className={`flex flex-col`}>
-                            {state.leftOrder.map((columnId: string) => {
-                                const column = state.board[columnId];
-                                const paddlers = column.paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId]);
-
-                                return (
-                                    <Column key={column.id} column={column} paddlers={paddlers}/>
-                                )
-                            })
-                            }
-                        </div>
-                        <div className={`flex flex-col`}>
-                            {state.rightOrder.map((columnId: string) => {
-                                const column = state.board[columnId];
-                                const paddlers = column.paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId]);
-
-                                return (
-                                    <Column key={column.id} column={column} paddlers={paddlers}/>
-                                )
-                            })
-                            }
-                        </div>
-                    </div>
-                    <div className={`flex justify-center`}>
-                        {state.sweep.map((columnId: string) => {
-                            const column = state.board[columnId];
-                            const paddlers = column.paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId]);
-
-                            return (
-                                <Column key={column.id} column={column} paddlers={paddlers}/>
-                            )
-                        })
-                        }`
-                    </div>
+            <div className={`flex-col`}>
+                <div className={`flex p-4`}>
+                    <input
+                        type="file"
+                        name="file"
+                        accept=".csv"
+                        onChange={changeHandler}
+                        // style={{display: "block", margin: "10px auto"}}
+                    />
                 </div>
-                <div className={`flex flex-col p-4`}>
-                    <div className={`flex gap-2`}>
-                        <p>{leftRightBalance.value}</p>
-                        <p>{leftRightBalance.rightHeavy ? "RIGHT HEAVY" : "LEFT HEAVY"}</p>
+                <div className={`flex p-4`}>
+                    {state.board && <Column key={state.board['main'].id} column={state.board['main']}
+                                            paddlers={state.board['main'].paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId])}/>}
+                    <div className={`flex-col`}>
+                        <div className={`flex justify-center`}>
+                            {state.drummer.map((columnId: string) => {
+                                const column = state.board[columnId];
+                                const paddlers = column.paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId]);
+
+                                return (
+                                    <Column key={column.id} column={column} paddlers={paddlers}/>
+                                )
+                            })
+                            }`
+                        </div>
+                        <div className={`flex`}>
+                            <div className={`flex flex-col`}>
+                                {state.leftOrder.map((columnId: string) => {
+                                    const column = state.board[columnId];
+                                    const paddlers = column.paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId]);
+
+                                    return (
+                                        <Column key={column.id} column={column} paddlers={paddlers}/>
+                                    )
+                                })
+                                }
+                            </div>
+                            <div className={`flex flex-col`}>
+                                {state.rightOrder.map((columnId: string) => {
+                                    const column = state.board[columnId];
+                                    const paddlers = column.paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId]);
+
+                                    return (
+                                        <Column key={column.id} column={column} paddlers={paddlers}/>
+                                    )
+                                })
+                                }
+                            </div>
+                        </div>
+                        <div className={`flex justify-center`}>
+                            {state.sweep.map((columnId: string) => {
+                                const column = state.board[columnId];
+                                const paddlers = column.paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId]);
+
+                                return (
+                                    <Column key={column.id} column={column} paddlers={paddlers}/>
+                                )
+                            })
+                            }`
+                        </div>
                     </div>
-                    <div className={`flex gap-2`}>
-                        <p>{frontBackBalance.value}</p>
-                        <p>{frontBackBalance.frontHeavy ? "FRONT HEAVY" : "BACK HEAVY"}</p>
+                    <div className={`flex flex-col p-4`}>
+                        <div className={`flex gap-2`}>
+                            <p>{leftRightBalance.value}</p>
+                            <p>{leftRightBalance.rightHeavy ? "RIGHT HEAVY" : "LEFT HEAVY"}</p>
+                        </div>
+                        <div className={`flex gap-2`}>
+                            <p>{frontBackBalance.value}</p>
+                            <p>{frontBackBalance.frontHeavy ? "FRONT HEAVY" : "BACK HEAVY"}</p>
+                        </div>
                     </div>
                 </div>
             </div>

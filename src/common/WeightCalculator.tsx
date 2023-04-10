@@ -1,6 +1,10 @@
-import paddler from "../components/Paddler";
+// import paddler from "../components/Paddler";
 
 export function calculateFrontBackBalance(board: any, paddlers: any) {
+    if (board === null) {
+        return {frontHeavy: false, value: 0, alert: false};
+    }
+
     const frontBackFactor = [
         6, 4.5, 3.5, 2.5, 1.5, 0.5, -0.5, -1.5, -2.5, -3.5, -4.5, -6
     ];
@@ -41,6 +45,10 @@ export function calculateFrontBackBalance(board: any, paddlers: any) {
 }
 
 export function calculateLeftRightBalance(board: any, paddlers: any) {
+    if (board === null) {
+        return {frontHeavy: false, value: 0, alert: false};
+    }
+
     const leftRightFactor = [
         0, 300, 330, 350, 350, 350, 350, 350, 350, 330, 300, 420
     ];
