@@ -43,7 +43,7 @@ function App() {
 
             const newColumn = {
                 ...start,
-                paddlerIds: newPaddlerIds
+                paddlerIds: newPaddlerIds.sort()
             }
 
             const newState = {
@@ -71,13 +71,13 @@ function App() {
                 } else {
                     const newStart = {
                         ...start,
-                        paddlerIds: startPaddlerIds
+                        paddlerIds: startPaddlerIds.sort()
                     }
 
                     finishPaddlerIds.splice(destination.index, 0, draggableId);
                     const newFinish = {
                         ...finish,
-                        paddlerIds: finishPaddlerIds
+                        paddlerIds: finishPaddlerIds.sort()
                     }
 
                     const main = state.board['main'];
@@ -85,7 +85,7 @@ function App() {
                     mainPaddlerIds.splice(destination.index, 0, replacedId);
                     const newMain = {
                         ...main,
-                        paddlerIds: mainPaddlerIds
+                        paddlerIds: mainPaddlerIds.sort()
                     }
 
                     const newState = {
@@ -106,13 +106,13 @@ function App() {
 
         const newStart = {
             ...start,
-            paddlerIds: startPaddlerIds
+            paddlerIds: startPaddlerIds.sort()
         }
 
         finishPaddlerIds.splice(destination.index, 0, draggableId);
         const newFinish = {
             ...finish,
-            paddlerIds: finishPaddlerIds
+            paddlerIds: finishPaddlerIds.sort()
         }
 
         const newState = {

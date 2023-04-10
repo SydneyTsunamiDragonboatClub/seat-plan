@@ -6,6 +6,7 @@ type PaddlerProps = {
 }
 
 const Paddler: React.FC<PaddlerProps> = ({paddler, index}) => {
+
     return (
         <Draggable draggableId={paddler.id} index={index}>
             {(provided, snapshot) => (

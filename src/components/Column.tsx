@@ -33,7 +33,7 @@ const Column: React.FC<ColumnProps> = ({column, paddlers}) => {
                          {...provided.droppableProps}
                         className={`p-2 transition-all 
                            ${column.id !== "main" ? "h-12" : "flex flex-col gap-2"}
-                           ${snapshot.isDraggingOver ? "bg-slate-600" : "bg-white"}
+                           ${snapshot.isDraggingOver ? "bg-slate-600" : column.id !== "main" && paddlers.length > 0 ? "bg-red-300" : "bg-white"}
                         `}
                     >
                         {paddlers.map((paddler:any, index:number) => (
