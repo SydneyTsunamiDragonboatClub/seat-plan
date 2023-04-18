@@ -1,6 +1,7 @@
 // import initialData from '../initialData';
 // import Boat from "../components/Boat";
 import Papa from "papaparse";
+import { PaddlerType } from "../types/PaddlerType";
 
 type BoatData = {
     paddlers: any,
@@ -11,15 +12,10 @@ type BoatData = {
     sweep: string[],
 }
 
-type Paddler = {
-    id: string | null,
-    birthdate: Date | null,
-    gender: string | null,
-    weight: number | null,
-};
+
 
 function getPaddler(data: any) {
-    let paddler: Paddler = {
+    let paddler: PaddlerType = {
         id: null,
         birthdate: null,
         gender: null,
@@ -42,7 +38,7 @@ function getPaddler(data: any) {
     return paddler;
 }
 
-function processFile(file: File) {
+export function processFile(file: File) {
     return new Promise((resolve, reject) => {
         Papa.parse(file, {
             header: true,
@@ -62,8 +58,7 @@ function processFile(file: File) {
     });
 }
 
-export async function buildBoat(file: File)
-{
+export async function buildBoat(file: File) {
     let paddlers = await processFile(file);
 
     let data: BoatData = {
@@ -76,17 +71,7 @@ export async function buildBoat(file: File)
     };
 
     let keys = Object.keys(data.paddlers);
-    // Object.entries(data.paddlers).forEach(([key, value]) => {
-    //     data.paddlers = {
-    //         ...data.paddlers,
-    //         [key]: {
-    //             ...value || null,
-    //             id: key
-    //         }
-    //     }
-    // });
 
-    // set board
     data.board = {
         ...data.board,
         main: {

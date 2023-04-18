@@ -1,11 +1,17 @@
-import React, {useState} from 'react';
-// import Boat from './components/Boat';
+import React, { useContext, useState } from 'react';
 import Column from './components/Column';
-import {DragDropContext} from 'react-beautiful-dnd';
-import {buildBoat} from "./common/DataBuilder";
-import {calculateLeftRightBalance, calculateFrontBackBalance} from "./common/WeightCalculator";
+import { DragDropContext } from 'react-beautiful-dnd';
+import { buildBoat } from "./utils/DataBuilder";
+import { calculateLeftRightBalance, calculateFrontBackBalance } from "./utils/WeightCalculator";
+import ImportPlayers from './components/ImportPlayers';
+import Tabs from './components/Tabs';
+import BoatContext, { BoatContextProvider } from './components/context/BoatContext';
 
 function App() {
+    const [paddlers, setPaddlers] = useState<any>(null);
+    // const boatContext = useContext(BoatContext);
+    // const paddlers = boatContext.paddlers;
+
     const [state, setState]: any = useState<any>({
         board: null,
         drummer: [],
@@ -14,13 +20,12 @@ function App() {
         sweep: [],
         paddlers: {}
     });
-    // const state:any = initialData;
 
     const leftRightBalance = calculateLeftRightBalance(state.board, state.paddlers);
     const frontBackBalance = calculateFrontBackBalance(state.board, state.paddlers);
 
     const onDragEnd = (result: any) => {
-        const {destination, source, draggableId} = result;
+        const { destination, source, draggableId } = result;
 
         if (!destination) {
             return;
@@ -132,6 +137,25 @@ function App() {
         setState(boat);
     }
 
+    const initializePlayers = (paddlers: any) => {
+        setPaddlers(paddlers);
+    }
+
+    const handleUpdate = (paddler: any) => {
+        let data = {
+            ...paddlers,
+            [paddler.id]: paddler
+        };
+        setPaddlers(data);
+    }
+
+    return (
+        <div>
+            <BoatContextProvider>
+                <ImportPlayers />
+            </BoatContextProvider>
+        </div>
+    );
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
@@ -142,19 +166,19 @@ function App() {
                         name="file"
                         accept=".csv"
                         onChange={changeHandler}
-                        // style={{display: "block", margin: "10px auto"}}
+                    // style={{display: "block", margin: "10px auto"}}
                     />
                 </div>
                 <div className={'px-4 space-x-2 flex text-sm'}>
                     <label>
-                        <input className="sr-only peer" name="size" type="radio" value="prem" checked/>
+                        <input className="sr-only peer" name="size" type="radio" value="prem" checked />
                         <div
                             className="w-24 h-9 rounded-lg flex items-center justify-center text-slate-700 bg-slate-200 peer-checked:font-semibold peer-checked:bg-slate-900 peer-checked:text-white">
                             Premier
                         </div>
                     </label>
                     <label>
-                        <input className="sr-only peer" name="size" type="radio" value="sra"/>
+                        <input className="sr-only peer" name="size" type="radio" value="sra" />
                         <div
                             className="w-24 h-9 rounded-lg flex items-center justify-center text-slate-700 bg-slate-200 peer-checked:font-semibold peer-checked:bg-slate-900 peer-checked:text-white">
                             Senior A
@@ -163,7 +187,7 @@ function App() {
                 </div>
                 <div className={`flex p-4`}>
                     {state.board && <Column key={state.board['main'].id} column={state.board['main']}
-                                            paddlers={state.board['main'].paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId])}/>}
+                        paddlers={state.board['main'].paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId])} />}
                     <div className={`flex-col`}>
                         <div className={`flex justify-center`}>
                             {state.drummer.map((columnId: string) => {
@@ -171,7 +195,7 @@ function App() {
                                 const paddlers = column.paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId]);
 
                                 return (
-                                    <Column key={column.id} column={column} paddlers={paddlers}/>
+                                    <Column key={column.id} column={column} paddlers={paddlers} />
                                 )
                             })
                             }`
@@ -183,7 +207,7 @@ function App() {
                                     const paddlers = column.paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId]);
 
                                     return (
-                                        <Column key={column.id} column={column} paddlers={paddlers}/>
+                                        <Column key={column.id} column={column} paddlers={paddlers} />
                                     )
                                 })
                                 }
@@ -194,7 +218,7 @@ function App() {
                                     const paddlers = column.paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId]);
 
                                     return (
-                                        <Column key={column.id} column={column} paddlers={paddlers}/>
+                                        <Column key={column.id} column={column} paddlers={paddlers} />
                                     )
                                 })
                                 }
@@ -206,7 +230,7 @@ function App() {
                                 const paddlers = column.paddlerIds.map((paddlerId: string) => state.paddlers[paddlerId]);
 
                                 return (
-                                    <Column key={column.id} column={column} paddlers={paddlers}/>
+                                    <Column key={column.id} column={column} paddlers={paddlers} />
                                 )
                             })
                             }`
@@ -235,7 +259,6 @@ function App() {
             {/*<Boat/>*/}
 
         </DragDropContext>
-
     );
 }
 

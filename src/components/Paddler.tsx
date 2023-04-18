@@ -1,27 +1,44 @@
-import  {Draggable} from 'react-beautiful-dnd';
+import { Draggable } from 'react-beautiful-dnd';
 
 type PaddlerProps = {
     paddler: any,
-    index: number
+    index: number,
+    draggable: boolean
 }
 
-const Paddler: React.FC<PaddlerProps> = ({paddler, index}) => {
+const Paddler: React.FC<PaddlerProps> = ({ paddler, index, draggable }) => {
 
     return (
-        <Draggable draggableId={paddler.id} index={index}>
-            {(provided, snapshot) => (
-                <div
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    ref={provided.innerRef}
-                    className={`border border-solid border-black 
-                    rounded-md p-px px-2 transition-all
-                    ${snapshot.isDragging ? "bg-slate-300" : "bg-white"}
-                    `}>
-                    {`${paddler.id} (${paddler.weight})`}
-                </div>
+        <div>
+            {draggable && (
+                <Draggable draggableId={paddler.id} index={index}>
+                    {(provided, snapshot) => (
+                        <div
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            ref={provided.innerRef}
+                            className={`border border-solid border-black 
+                                rounded-md p-px px-2 transition-all
+                                ${snapshot.isDragging ? "bg-slate-300" : "bg-white"}
+                            `}>
+                            {`${paddler.id} (${paddler.weight})`}
+                        </div>
+                    )}
+                </Draggable>
             )}
-        </Draggable>
+            {!draggable && (
+                <div
+                    className={`
+                        flex place-content-between
+                        w-48 border border-solid border-black 
+                        rounded-md px-4 py-2 transition-all`}>
+                    <span>{`${paddler.id} (${paddler.weight})`}</span>
+                    <span>{paddler.races || 0}</span>
+                </div>
+            )
+
+            }
+        </div>
     )
 }
 
