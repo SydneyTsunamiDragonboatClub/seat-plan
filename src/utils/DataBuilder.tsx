@@ -27,7 +27,7 @@ function getPaddler(data: any) {
             [lastname, firstname] = (value as string).split(",");
             paddler.id = `${firstname.trim()} ${lastname.charAt(0)}`;
         } else if (key.toLowerCase() === 'date of birth') {
-            paddler.birthdate = value as Date
+            paddler.birthdate = value as string
         } else if (key.toLowerCase() === 'gender') {
             paddler.gender = value as string
         } else if (key.toLowerCase() === 'current weight (in kgs)') {

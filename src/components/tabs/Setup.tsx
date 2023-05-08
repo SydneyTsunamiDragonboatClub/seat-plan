@@ -5,6 +5,7 @@ import SourceDrop from "../drag-and-drop/SourceDrop";
 import { useContext } from "react";
 import BoatContext from "../context/BoatContext";
 import { RaceType } from "../../types/RaceType";
+import BoatStats from "../misc/BoatStats";
 
 const Setup = () => {
     const boatContext = useContext(BoatContext);
@@ -45,6 +46,9 @@ const Setup = () => {
                 </div>
                 <div className={`flex-col gap-2`}>
                     <Boat />
+                </div>
+                <div>
+                    <BoatStats />
                 </div>
             </div>
         </DragDropContext>

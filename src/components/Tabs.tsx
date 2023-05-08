@@ -27,6 +27,7 @@ const Tabs: React.FC<PaddlerTabType> = ({ categories }) => {
 
     const tabClicked = (value: string) => {
         setActiveTab(value);
+        boatContext.selectRace(value);
     }
 
     const handlePaddlerUpdate = (paddler: any) => {

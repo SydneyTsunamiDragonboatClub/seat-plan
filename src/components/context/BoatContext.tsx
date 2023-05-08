@@ -1,6 +1,7 @@
 import { ReactNode, createContext, useState } from "react";
 import { PaddlerType } from "../../types/PaddlerType";
 import { RaceType } from "../../types/RaceType";
+import {DateTime, Interval} from "luxon";
 
 const BoatContext = createContext({
     paddlers: null,
@@ -32,13 +33,37 @@ export const BoatContextProvider: React.FC<Props> = ({ children }) => {
     }
 
     const handleRaceCategory = (name: string) => {
+        let age, type, distance;
+        [age, type, distance] = name.split(" - ");
+        console.log(age, type, distance, paddlers);
+
+        let sourcePaddlers: PaddlerType[] = Object.values(paddlers);
+        if (age === "Senior A")
+        {
+            const now = DateTime.now();
+            sourcePaddlers = sourcePaddlers.filter(p => Interval.fromDateTimes(DateTime.fromISO(p.birthdate as string), now).length('years') > 40);
+        }
+
+        if (age === "Senior B")
+        {
+            const now = DateTime.now();
+            sourcePaddlers = sourcePaddlers.filter(p => Interval.fromDateTimes(DateTime.fromISO(p.birthdate as string), now).length('years') > 50);
+        }
+
+        if (type === "Women")
+        {
+            sourcePaddlers = sourcePaddlers.filter(p => p.gender === "F");
+        }
+
+
         let race: RaceType = {
             category: name,
-            sourcePaddlers: Object.values(paddlers),
+            sourcePaddlers,
             setup: {}
         }
         if (name in raceCategories) {
             console.log("Category already exists");
+            setSelectedRace(raceCategories[name]);
         } else {
             setRaceCategories({
                 ...raceCategories,
@@ -51,53 +76,61 @@ export const BoatContextProvider: React.FC<Props> = ({ children }) => {
     const handleUpdateRace = (destination: any, source: any, id: string) => {
         let race: RaceType = selectedRace;
         let sourcePaddlers = race.sourcePaddlers;
-        let paddler;
+        let paddler, replacedPaddler = null;
 
+        replacedPaddler = race.setup[destination.droppableId] || null;
+        
         if (source.droppableId === "main") {
             paddler = race.sourcePaddlers.find(p => p.id === id);
             let index = race.sourcePaddlers.indexOf(paddler as PaddlerType);
-            sourcePaddlers = sourcePaddlers.splice(index, 1);
-        }
-        else {
+            sourcePaddlers.splice(index, 1);
+            
+            if (replacedPaddler) {
+                sourcePaddlers.push(replacedPaddler);
+            }
 
+            race.setup = {
+                ...race.setup,
+                sourcePaddlers: sourcePaddlers,
+                [destination.droppableId]: paddler
+            }
         }
-        race.setup = {
-            ...race.setup,
-            sourcePaddlers: sourcePaddlers,
-            [destination.droppableId]: paddler
+        else
+        {
+            paddler = race.setup[source.droppableId] || null;
+            race.setup = {
+                ...race.setup,
+                sourcePaddlers: sourcePaddlers,
+                [destination.droppableId]: paddler,
+                [source.droppableId]: replacedPaddler
+            }
         }
+
+        setRaceCategories({
+            ...raceCategories,
+            [race.category]: race
+        });
+        setSelectedRace(race);
     }
 
+    const handleRaceSelection = (name: string) => {
+        setSelectedRace(Object.values(raceCategories).find((cat) => (cat as RaceType).category === name));
+    }
 
-    console.log(race);
-    console.log(destination);
-    console.log(source);
-    console.log(id);
-    setRaceCategories({
-        ...raceCategories,
-        [race.category]: race
-    });
-    setSelectedRace(race);
-}
-
-const handleRaceSelection = (name: string) => {
-    setSelectedRace(Object.values(raceCategories).find((cat) => (cat as RaceType).category === name));
-}
-
-return (
-    <BoatContext.Provider
-        value={{
-            paddlers,
-            raceCategories,
-            selectedRace,
-            setPaddlers: setPaddlers,
-            selectRace: handleRaceSelection,
-            updatePaddler: handleUpdatePaddler,
-            createRaceCategory: handleRaceCategory,
-            updateRaceCategory: handleUpdateRace
-        }}
-    >
-        {children}
-    </BoatContext.Provider>
-)
+    return (
+        <BoatContext.Provider
+            value={{
+                paddlers,
+                raceCategories,
+                selectedRace,
+                setPaddlers: setPaddlers,
+                selectRace: handleRaceSelection,
+                updatePaddler: handleUpdatePaddler,
+                createRaceCategory: handleRaceCategory,
+                updateRaceCategory: handleUpdateRace
+            }}
+        >
+            {children}
+        </BoatContext.Provider>
+    )
 }

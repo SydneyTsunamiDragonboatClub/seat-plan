@@ -1,6 +1,6 @@
 export type PaddlerType = {
     id: string | null,
-    birthdate: Date | null,
+    birthdate: string | null,
     gender: string | null,
     weight: number | null,
 };
